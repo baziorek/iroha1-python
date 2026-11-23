@@ -27,24 +27,59 @@ implementation: [`baziorek/iroha1-cpp`](https://github.com/baziorek/iroha1-cpp).
 ## Requirements
 
 - Python 3.10 or newer
-- A running Iroha 1.x node (e.g. the official
-  [`hyperledger/iroha:1.6.0`](https://github.com/hyperledger/iroha)
-  Docker image — see `docker/docker-compose.yaml` for a ready-made
-  single-node setup)
+- A running Iroha 1.x node — see [Getting an Iroha node](#getting-an-iroha-node)
 
 ## Installation
 
+> **Note:** the `iroha` package on PyPI is the *upstream*
+> `hyperledger/iroha-python` release — it is not published from this fork
+> (yet). To get this modernized version, install it from GitHub:
+
 ```bash
-pip install iroha
+pip install git+https://github.com/baziorek/iroha1-python.git@iroha1-main
 ```
 
-Or from sources:
+(Any ref works after `@` — e.g. a feature branch — if you want to try an
+unmerged change.)
+
+…or from a local clone:
 
 ```bash
 git clone https://github.com/baziorek/iroha1-python
 cd iroha1-python
 pip install -e .
 ```
+
+Both routes install the same public API (`Iroha`, `IrohaCrypto`,
+`IrohaGrpc`) — the fork differs only in refreshed dependencies, packaging
+fixes and tests.
+
+## Getting an Iroha node
+
+This library talks to an Iroha **1.x** node over gRPC (Torii, port 50051).
+You need one of:
+
+- **Official image** — `docker/docker-compose.yaml` brings up a ready-made
+  single-node network with Postgres using
+  [`hyperledger/iroha:1.6.0`](https://github.com/hyperledger/iroha):
+
+  ```bash
+  cd docker && docker compose up -d
+  ```
+
+- **Reanimated Iroha 1 fork** — the C++ node maintained alongside this
+  library at [`baziorek/iroha1-cpp`](https://github.com/baziorek/iroha1-cpp)
+  publishes a Docker image to GHCR (public, multi-arch):
+
+  ```bash
+  docker pull ghcr.io/baziorek/iroha1-cpp:iroha1-main
+  ```
+
+  Its CI also builds **AppImage** bundles as workflow artifacts, and the
+  project documents building/running `irohad` from source.
+
+- **Any other Iroha 1.x deployment** — point `IrohaGrpc` at its Torii
+  address.
 
 ## Quick start
 
