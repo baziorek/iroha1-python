@@ -25,6 +25,8 @@ services:
       - iroha
     volumes:
       - ./iroha:/opt/iroha_data
+    ports:
+      - "50051:50051"
     # logging:
     #   driver: none
 

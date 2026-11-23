@@ -5,6 +5,7 @@
 #
 
 from . import ed25519 as ed25519_sha3
+import nacl.exceptions
 import nacl.signing as ed25519_sha2
 import hashlib
 import binascii
@@ -136,12 +137,15 @@ class IrohaCrypto(object):
         :return: bool, whether the signature is valid for the message
         """
         parse_message = IrohaCrypto.get_payload_to_be_signed(message)
-        signature_bytes = binascii.unhexlify(signature.signature)
-        public_key = ed25519_sha2.VerifyKey(binascii.unhexlify(signature.public_key)[3:])
-        valid_message = ed25519_sha2.VerifyKey.verify(public_key, parse_message, signature_bytes)
-        if valid_message == parse_message:
-            return True
-        return False
+        try:
+            signature_bytes = binascii.unhexlify(signature.signature)
+            public_key = ed25519_sha2.VerifyKey(
+                binascii.unhexlify(signature.public_key)[3:])
+            valid_message = ed25519_sha2.VerifyKey.verify(
+                public_key, parse_message, signature_bytes)
+        except (binascii.Error, ValueError, nacl.exceptions.BadSignatureError):
+            return False
+        return valid_message == parse_message
 
     @staticmethod
     def is_signature_valid(message, signature):

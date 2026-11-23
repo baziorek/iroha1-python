@@ -8,7 +8,7 @@ is supported. It can be used with one of official docker images:
 - `hyperledger/iroha:latest`
 - `hyperledger/iroha-burrow:latest` with Hyperledger-Burrow support (smart contracts).
 
-The library works in Python 3 environment (Python 2 is not supported).
+The library works in Python 3.10+ environment (Python 2 is not supported).
 
 ### Installation
 
@@ -43,6 +43,26 @@ for status in net.tx_status_stream(alice_tx):
 ```
 
 Please explore [examples](examples) directory for more usage examples.
+
+### Tests
+
+```bash
+pip install -e . -r dev-requirements.txt
+pytest iroha/tests
+```
+
+Unit tests run without any external services. Integration tests in
+`iroha/tests/integration/` are skipped unless a live Iroha node is provided
+via environment variables:
+
+```bash
+IROHA_HOST_ADDR=127.0.0.1:50051 \
+IROHA_ADMIN_PRIVATE_KEY=<hex private key of an admin account> \
+pytest iroha/tests/integration
+```
+
+A suitable single-node network can be started with
+`docker/docker-compose.yaml` (see `.github/workflows/ci.yml` for an example).
 
 All the library methods have docstrings in its source [iroha.py](iroha/iroha.py).
 
