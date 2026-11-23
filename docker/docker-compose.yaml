@@ -2,13 +2,13 @@ version: '3.5'
 
 networks:
   iroha:
-    name: ${SUBNET}
+    name: ${SUBNET:-iroha-local}
     attachable: true
 
 services:
   iroha:
-    image: hyperledger/iroha:${IROHA_VERSION}
-    container_name: iroha-${SUBNET}
+    image: hyperledger/iroha:${IROHA_VERSION:-1.6.0}
+    container_name: iroha-${SUBNET:-local}
     depends_on:
       - some-postgres
     restart: always
@@ -32,7 +32,7 @@ services:
 
   some-postgres:
     image: postgres:9.5
-    container_name: iroha-postgres-${SUBNET}
+    container_name: iroha-postgres-${SUBNET:-local}
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=postgres
